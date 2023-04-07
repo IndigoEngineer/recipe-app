@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
+#[UniqueEntity('name')]
 class Ingredient
 {
     #[ORM\Id]
@@ -22,7 +24,7 @@ class Ingredient
         minMessage: 'the name must be at least {{ limit }} characters long',
         maxMessage: 'The first name cannot be longer than {{ limit }} characters',
     )]
-    #[Assert\Unique(message: 'This name is already used')]
+//    #[Assert\Unique(message: 'This name is already used')]
     private ?string $name = null;
 
 
