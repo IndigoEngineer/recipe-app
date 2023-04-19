@@ -91,14 +91,13 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('user.edit.password',array('id' => $user->getId()));
             }
             else{
-                $new_password = $form->getData()['newPassword'];
-                $newHashedPassword = $passwordHasher->hashPassword(
-                    $user,
-                    $new_password
-                );
-                $user->setPassword($newHashedPassword);
+                $newPassword = $form->getData()['newPassword'];
+                $user->setUpdatedAt(new \DateTimeImmutable);
+                $user->setPlainPassword($newPassword);
+
                 $manager->persist($user);
                 $manager->flush();
+
                 $this->addFlash(
                     'success',
                     'Votre mot de passe a été modifié avec success'
