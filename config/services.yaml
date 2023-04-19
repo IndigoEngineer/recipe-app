@@ -19,8 +19,19 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
     App\EntityListener\:
         resource: '../src/EntityListener/'
         tags: ["doctrine.orm.entity_listener"]
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+#    App\UserListener:
+#        tags:
+#            - name: doctrine.orm.entity_listener
+#              event: preUpdate
+#              entity: App\Entity\User
+#                # entity_manager attribute is optional
+#              entity_manager: custom
+#                # method attribute is optional
+#              method: validateEmail
