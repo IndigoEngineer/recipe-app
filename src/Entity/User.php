@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -55,9 +57,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private $plainPassword = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Ingredient::class, orphanRemoval: true)]
+    private Collection $inrgedients;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Recipe::class, orphanRemoval: true)]
+    private Collection $recipes;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable;
         $this->updatedAt = new \DateTimeImmutable;
+        $this->inrgedients = new ArrayCollection();
+        $this->recipes = new ArrayCollection();
     }
     /**
      * @return null
@@ -195,5 +205,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return Collection<int, Ingredient>
+     */
+    public function getInrgedients(): Collection
+    {
+        return $this->inrgedients;
+    }
+
+    public function addInrgedient(Ingredient $inrgedient): self
+    {
+        if (!$this->inrgedients->contains($inrgedient)) {
+            $this->inrgedients->add($inrgedient);
+            $inrgedient->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInrgedient(Ingredient $inrgedient): self
+    {
+        if ($this->inrgedients->removeElement($inrgedient)) {
+            // set the owning side to null (unless already changed)
+            if ($inrgedient->getUser() === $this) {
+                $inrgedient->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recipe>
+     */
+    public function getRecipes(): Collection
+    {
+        return $this->recipes;
+    }
+
+    public function addRecipe(Recipe $recipe): self
+    {
+        if (!$this->recipes->contains($recipe)) {
+            $this->recipes->add($recipe);
+            $recipe->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipe(Recipe $recipe): self
+    {
+        if ($this->recipes->removeElement($recipe)) {
+            // set the owning side to null (unless already changed)
+            if ($recipe->getUser() === $this) {
+                $recipe->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
