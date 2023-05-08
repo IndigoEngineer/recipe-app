@@ -1,0 +1,63 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Symrecipe - {{ recipe.name }}
+{% endblock  %}
+{% block body %}
+    <div class="container">
+        <h1 class="mt-4"> {{ recipe.name}}</h1>
+        <span class="badge bg-dark">Créé le {{ recipe.createdAt | date('d-m-Y') }}</span>
+
+        <div class="mt-4">
+            {%  if recipe.time %}
+                <p> {{ recipe.time }} minutes</p>
+            {% else %}
+                <p> Nombre de minutes non renseigné</p>
+            {% endif %}
+        </div>
+
+        <div class="mt-4">
+            {%  if recipe.nbPeople %}
+                <p> {{ recipe.nbPeople }} minutes</p>
+            {% else %}
+                <p> Nombre de minutes non renseigné</p>
+            {% endif %}
+        </div>
+
+        <div class="mt-4">
+            {%  if recipe.difficulty %}
+                <p>Difficulté :  {{ recipe.difficulty}} </p>
+            {% else %}
+                <p> Difficulté non renseigné</p>
+            {% endif %}
+        </div>
+
+        <div class="mt-4">
+            {%  if recipe.price %}
+                <p> {{ recipe.price }}€</p>
+            {% else %}
+                <p> Prix non renseigné</p>
+            {% endif %}
+        </div>
+
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Description
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+                    <div class="accordion-body">
+                        {{ recipe.description | raw }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="mt-4">Ingrédients</p>
+        {% for ingredient in recipe.ingredients %}
+            <span class="badge bg-dark">{{ ingredient }}</span>
+        {% endfor %}
+    </div>
+
+{% endblock %}

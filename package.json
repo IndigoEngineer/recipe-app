@@ -1,0 +1,7 @@
+{
+  "name": "symrecipe",
+  "version": "1.0.0",
+  "dependencies": {
+    "@hotwired/turbo": "^7.3.0"
+  }
+}

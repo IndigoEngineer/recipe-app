@@ -38,6 +38,28 @@ class RecipeController extends AbstractController
         ]);
     }
 
+    #[Route('/recipe/public', name: 'recipe.public',methods: ['GET'])]
+    public  function indexPublic (RecipeRepository $repository,PaginatorInterface $paginator, Request $request):Response {
+
+        $recipes = $paginator->paginate(
+            $repository->findPublicRecipe(null),
+            $request->query->getInt('page', 1),/*page number*/
+            10 /*limit per page*/
+        );
+
+        return $this->render("pages/recipe/index_public.html.twig",[
+            'recipes'=>$recipes
+        ]);
+    }
+    #[Security("is_granted('ROLE_USER') and  recipe.getIsPublic() === true")]
+    #[Route('/recipe/show/{id}', name: 'recipe.show',methods: ['GET'])]
+    public function show(Recipe $recipe):Response
+    {
+            return $this->render("pages/recipe/show.html.twig",[
+                "recipe" => $recipe
+            ]);
+    }
+
     #[IsGranted('ROLE_USER')]
     #[Route('/recipe/new', name: 'recipe.new',methods: ['GET','POST'])]
     public function new(Request $request, EntityManagerInterface $manager) : Response
@@ -55,11 +77,11 @@ class RecipeController extends AbstractController
                 'success',
                 'Votre recette have been created with success'
             );
-            return $this->redirectToRoute('recipe.index');
+            return $this->redirectToRoute('recipe.index',[], 303);
         }
 
         return $this->render("pages/recipe/new.html.twig",[
-            'form'=>$form->createView()
+            'form'=>$form
         ]);
     }
 
@@ -83,11 +105,19 @@ class RecipeController extends AbstractController
                 'success',
                 'Votre recette a été modifié avec success'
             );
-            return $this->redirectToRoute('recipe.index');
+            return $this->redirectToRoute('recipe.index',[], 303);
+        }
+
+        if ($form->isSubmitted() && !$form->isValid()){
+            $response = new Response(null,422);
+
+            return $this->render("pages/recipe/edit.html.twig",[
+                'form' => $form
+            ], $response);
         }
 
         return  $this->render('pages/recipe/edit.html.twig',[
-            'form' => $form->createView()
+            'form' => $form
         ]);
     }
 

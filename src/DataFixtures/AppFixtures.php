@@ -63,7 +63,8 @@ class AppFixtures extends Fixture
             $recipe->setPrice(mt_rand(1, 100))
                    ->setTime(mt_rand(0,1) == 1 ? mt_rand(1,1441) : null)
                    ->setNbPeople(mt_rand(0,1) == 1 ? mt_rand(1,49) : null)
-                   ->setIsFavourite(mt_rand(0,1) == 1);
+                   ->setIsFavourite(mt_rand(0,1) == 1)
+                   ->setIsPublic(mt_rand(0,1) == 1);
 
             for ($k = 0; $k < mt_rand(5, 15); $k++){
                 $recipe->addIngredient($ingredients[mt_rand(0,count($ingredients) - 1)]);

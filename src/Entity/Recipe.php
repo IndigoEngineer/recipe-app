@@ -21,7 +21,7 @@ class Recipe
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     #[Assert\Length(min: 2,max: 50)]
     private ?string $name = null;
 
@@ -40,24 +40,24 @@ class Recipe
     #[ORM\Column(nullable: true)]
     private ?int $difficulty = null;
 
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
 
     #[Assert\LessThan(1000)]
-    #[Assert\Positive()]
+    #[Assert\Positive]
     #[ORM\Column]
     private ?float $price = null;
 
     #[ORM\Column]
     private ?bool $isFavourite = null;
 
-    #[Assert\NotNull()]
+    #[Assert\NotNull]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[Assert\NotNull()]
+    #[Assert\NotNull]
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
@@ -67,6 +67,9 @@ class Recipe
     #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    #[ORM\Column]
+    private ?bool $isPublic = null;
 
     public function __construct()
     {
@@ -227,6 +230,18 @@ class Recipe
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): self
+    {
+        $this->isPublic = $isPublic;
 
         return $this;
     }

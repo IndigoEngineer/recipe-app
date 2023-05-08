@@ -55,7 +55,7 @@ class UserController extends AbstractController
 
     }
 
-    #[Security("is_granted('ROLE_USER') and user === user ")]
+    #[Security("is_granted('ROLE_USER') and user === originalUser ")]
     #[Route('/user/edit-password/{id}', name: 'user.edit.password' , methods: ['GET','POST'])]
     public  function editPassword(User $originalUser, Request $request, EntityManagerInterface $manager,UserPasswordHasherInterface $passwordHasher):Response
     {
@@ -77,7 +77,7 @@ class UserController extends AbstractController
             }
             else{
                 $newPassword = $form->getData()['newPassword'];
-                $originalUser>setUpdatedAt(new \DateTimeImmutable);
+                $originalUser->setUpdatedAt(new \DateTimeImmutable);
                 $originalUser->setPlainPassword($newPassword);
 
                 $manager->persist($originalUser);

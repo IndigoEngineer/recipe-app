@@ -53,8 +53,9 @@ class IngredientController extends AbstractController
             return $this->redirectToRoute('ingredient.index');
         }
 
+
         return $this->render('pages/ingredient/new.html.twig',[
-            'form'=>$form->createView()
+            'form'=>$form
         ]);
     }
     #[Security("is_granted('ROLE_USER') and  user === ingredient.getUser()")]
@@ -81,7 +82,7 @@ class IngredientController extends AbstractController
         }
 
         return  $this->render('pages/ingredient/edit.html.twig',[
-                'form' => $form->createView()
+                'form' => $form
         ]);
     }
 
