@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Mark;
+use App\Form\MarkType;
 use App\Form\RecipeType;
+use App\Repository\MarkRepository;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -52,11 +55,38 @@ class RecipeController extends AbstractController
         ]);
     }
     #[Security("is_granted('ROLE_USER') and  recipe.getIsPublic() === true")]
-    #[Route('/recipe/show/{id}', name: 'recipe.show',methods: ['GET'])]
-    public function show(Recipe $recipe):Response
+    #[Route('/recipe/show/{id}', name: 'recipe.show',methods: ['GET','POST'])]
+    public function show(Mark $mark, Request $request,
+                         Recipe $recipe,EntityManagerInterface $manager,
+                         MarkRepository $markRepository):Response
     {
+        $mark = new Mark();
+        $form = $this->createForm(MarkType::class, $mark);
+        $form->handleRequest( $request) ;
+        if ($form->isSubmitted() && $form->isValid() ){
+            $mark->setUser($this->getUser())
+                  ->setRecipe($recipe);
+
+            $existingMark = $markRepository->findOneBy([
+                'user'=>$this->getUser(),
+                'recipe'=>$recipe
+            ]);
+
+            if(!$existingMark){
+                $manager->persist($mark);
+            }else{
+                $existingMark->setMark($mark->getMark());
+            }
+            $manager->flush();
+            $this->addFlash(
+                'success',
+                'Votre note a été prise en compte'
+            );
+
+        }
             return $this->render("pages/recipe/show.html.twig",[
-                "recipe" => $recipe
+                "recipe" => $recipe,
+                "notationForm" =>$form
             ]);
     }
 

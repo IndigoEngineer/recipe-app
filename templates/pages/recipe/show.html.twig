@@ -5,9 +5,22 @@
 {% endblock  %}
 {% block body %}
     <div class="container">
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-dismissible alert-success mt-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+
         <h1 class="mt-4"> {{ recipe.name}}</h1>
         <span class="badge bg-dark">Créé le {{ recipe.createdAt | date('d-m-Y') }}</span>
-
+        <div class="mt-4">
+            {%  if recipe.averageMark|number_format(2) %}
+                <p>Note globale :  {{ recipe.averageMark}} </p>
+            {% else %}
+                <p>Recette pas encore notée</p>
+            {% endif %}
+        </div>
         <div class="mt-4">
             {%  if recipe.time %}
                 <p> {{ recipe.time }} minutes</p>
@@ -32,6 +45,7 @@
             {% endif %}
         </div>
 
+
         <div class="mt-4">
             {%  if recipe.price %}
                 <p> {{ recipe.price }}€</p>
@@ -39,6 +53,9 @@
                 <p> Prix non renseigné</p>
             {% endif %}
         </div>
+
+
+
 
         <div class="accordion" id="accordionExample">
             <div class="accordion-item">
@@ -58,6 +75,11 @@
         {% for ingredient in recipe.ingredients %}
             <span class="badge bg-dark">{{ ingredient }}</span>
         {% endfor %}
+
+        <div class="notation">
+            {{ form(notationForm) }}
+        </div>
     </div>
+
 
 {% endblock %}
