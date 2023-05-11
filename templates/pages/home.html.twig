@@ -13,6 +13,27 @@
                 <a class="btn btn-primary btn-lg" href="#" role="button">Inscription</a>
             </p>
         </div>
+        {% if recipes is not empty %}
+            <h1>Recettes de la communauté</h1>
+            <div class="d-flex justify-content-between flex-wrap">
+                {% for recipe in recipes %}
+                    <div class="card border-success mb-3" style="max-width: 20rem;">
+                        <div class="card-header">Recette n°{{ loop.index }}</div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ recipe.name }}</h4>
+                            <p class="card-text">{{ recipe.description }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="navigation d-flex justify-content-center mt-4">
+                {{ knp_pagination_render(recipes) }}
+            </div>
+
+        {% else %}
+            <h1>YOLO</h1>
+        {% endif %}
     </div>
 
 {% endblock %}

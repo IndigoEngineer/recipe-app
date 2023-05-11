@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230420221931 extends AbstractMigration
+final class Version20230508155959 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,12 @@ final class Version20230420221931 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE recipe ADD is_public TINYINT(1) NOT NULL');
+        $this->addSql('ALTER TABLE recipe ADD image_name VARCHAR(255) DEFAULT NULL, ADD image_size INT DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE recipe DROP is_public');
+        $this->addSql('ALTER TABLE recipe DROP image_name, DROP image_size');
     }
 }

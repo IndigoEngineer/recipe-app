@@ -20,12 +20,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RecipeController extends AbstractController
 {
-    private UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher){
-        $this->passwordHasher = $passwordHasher;
-    }
-
     #[IsGranted('ROLE_USER')]
     #[Route('/recipe', name: 'recipe.index',methods: ['GET'])]
     public function index(RecipeRepository $repository,PaginatorInterface $paginator, Request $request): Response
@@ -54,9 +48,9 @@ class RecipeController extends AbstractController
             'recipes'=>$recipes
         ]);
     }
-    #[Security("is_granted('ROLE_USER') and  recipe.getIsPublic() === true")]
+    #[Security("is_granted('ROLE_USER') and  (recipe.getIsPublic() === true || user === recipe.getUser())" )]
     #[Route('/recipe/show/{id}', name: 'recipe.show',methods: ['GET','POST'])]
-    public function show(Mark $mark, Request $request,
+    public function show(Request $request,
                          Recipe $recipe,EntityManagerInterface $manager,
                          MarkRepository $markRepository):Response
     {

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Contact;
 use App\Entity\Mark;
 use App\Entity\Recipe;
 use App\Entity\User;
@@ -10,7 +11,7 @@ use Faker\Generator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Ingredient;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 
 class AppFixtures extends Fixture
 {
@@ -24,6 +25,15 @@ class AppFixtures extends Fixture
     {
 
         $users = [];
+        $admin = new User();
+        $admin->setFullName('Admin')
+               ->setPseudo("admin supreme")
+               ->setEmail("admin@symrecipe.com")
+               ->setRoles(['ROLE_USER','ROLE_ADMIN'])
+               ->setPlainPassword("password");
+        $manager->persist($admin);
+        $users[] = $admin;
+
         // Users
 
         for ($k = 0; $k < 10 ; $k++){
@@ -85,7 +95,17 @@ class AppFixtures extends Fixture
             $mark->setMark(mt_rand(0,5));
             $manager->persist($mark);
         }
+        // contacts
 
+        for ($i =0 ; $i < 50 ; $i++){
+           $contact = new Contact();
+           $contact->setMessage($this->faker->paragraph(2,true))
+                   ->setSubject($this->faker->words(5,true))
+                   ->setFullName($this->faker->name)
+                   ->setEmail($this->faker->email);
+
+            $manager->persist($contact);
+        }
 
         $manager->flush();
     }

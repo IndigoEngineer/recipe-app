@@ -13,6 +13,9 @@
         {% endfor %}
 
         <h1 class="mt-4"> {{ recipe.name}}</h1>
+        <div class="recipe__image">
+            <img alt="" style="max-width: 25%;" src="{{ vich_uploader_asset(recipe,'imageFile') }}">
+        </div>
         <span class="badge bg-dark">Créé le {{ recipe.createdAt | date('d-m-Y') }}</span>
         <div class="mt-4">
             {%  if recipe.averageMark|number_format(2) %}
